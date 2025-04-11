@@ -1,5 +1,9 @@
 package org.example.managers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.example.recources.Dragon;
+
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -14,11 +18,11 @@ import java.util.List;
 
 public class FileManager {
     public static void readFile() {
-        Environment.getInstance().getCollectionManager().getCollection().putAll(jsonReader());
+        ServerEnvironment.getInstance().getCollectionManager().getCollection().putAll(jsonReader());
     }
 
     private static Hashtable<Long, Dragon> jsonReader() {
-        String fileName = Environment.getInstance().getPath();
+        String fileName = ServerEnvironment.getInstance().getPath();
         File file = new File(fileName);
         Path path = file.toPath();
 
