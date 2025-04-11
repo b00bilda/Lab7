@@ -14,32 +14,29 @@ public class Receiver {
             throw new IllegalArgumentException("command parameter");
         }
     }
-
     public static String exit(Request request) {
-        if (request.getMessage().split("").length == 1) {
+        if (request.getMessage().split("").length == 1 ) {
             System.exit(0);
             return "";
         } else {
             throw new IllegalArgumentException("command parameter");
         }
     }
-
-    public static String filterLessThanWeight(Request request) {
-        if (request.getMessage().split("").length == 2) {
+    public static String filterLessThanWeight(Request request){
+        if (request.getMessage().split("").length == 2){
             ServerEnvironment.getInstance().getCollectionManager().filterLessThanWeight(request);
             return "Collection was changed";
         } else {
             throw new IllegalArgumentException("command parameter");
         }
     }
-
-    public static String help(Request request) {
-        if (request.getMessage().split("").length == 1) {
+    public static String help(Request request){
+        if (request.getMessage().split("").length == 1){
             ServerEnvironment.getInstance().getCommandManager().getCommandList().forEach((s, command) -> {
                 System.out.println(s + ": " + command.getDescription());
             });
             return "";
-        } else {
+        }else {
             throw new IllegalArgumentException("command parameter");
         }
     }
@@ -52,6 +49,67 @@ public class Receiver {
             System.out.println("initialization date: " + manager.getInitializationDate());
             System.out.println("amount of elements: " + manager.getCollection().size());
             return "";
+        } else {
+            throw new IllegalArgumentException("command parameter");
+        }
+    }
+
+    public static String insert(Request request) {
+        CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
+        if (request.getMessage().split(" ").length == 2 & !manager.getCollection().containsKey(request.getMessage().split(" ")[1])) {
+            manager.add(request.getDragon());
+            return "Element was added";
+        } else {
+            throw new IllegalArgumentException("command parameter");
+        }
+    }
+
+    public static String showMinByCoordinates(Request request) {
+        return ServerEnvironment.getInstance().getCollectionManager().getMinByCoordinates(request);
+    }
+
+    public static String remove(Request request) {
+        long key = Long.parseLong(request.getMessage().split(" ")[1]);
+        ServerEnvironment.getInstance().getCollectionManager().getCollection().remove(request.getMessage());
+        return "Element was removed";
+    }
+
+    public static String removeGreater(Request request) {
+        return ServerEnvironment.getInstance().getCollectionManager().removeGreater(request.getDragon());
+    }
+
+    public static String removeLower(Request request) {
+        return ServerEnvironment.getInstance().getCollectionManager().removeLower(request.getDragon());
+    }
+
+    public static String replaceIfGreater(Request request) {
+        return ServerEnvironment.getInstance().getCollectionManager().replaceIfGreater(request);
+    }
+
+    public static String save(Request request) {
+        if (request.getMessage().split(" ").length == 1) {
+            ServerEnvironment.getInstance().getFileManager().saveToFile();
+            return "Data was saved";
+        } else {
+            throw new IllegalArgumentException("command parameter");
+        }
+    }
+
+    public static String sumOfAge(Request request) {
+        if (request.getMessage().split(" ").length == 1) {
+            return ServerEnvironment.getInstance().getCollectionManager().getSumOfAges();
+        } else {
+            throw new IllegalArgumentException("command parameter");
+        }
+    }
+
+    public static String updateById(Request request) {
+        CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
+        long key = request.getDragon().getID();
+        if (request.getMessage().split(" ").length == 2 & manager.getCollection().containsKey(key)) {
+            manager.getCollection().remove(key);
+            manager.add(request.getDragon());
+            return "Element was updated";
         } else {
             throw new IllegalArgumentException("command parameter");
         }
