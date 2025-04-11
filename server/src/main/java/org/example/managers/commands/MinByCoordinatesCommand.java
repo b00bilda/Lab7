@@ -1,6 +1,7 @@
 package org.example.managers.commands;
 
 import org.example.managers.CollectionManager;
+import org.example.managers.ServerEnvironment;
 import org.example.recources.Dragon;
 
 import java.util.Collections;
@@ -17,7 +18,7 @@ public class MinByCoordinatesCommand extends BaseCommand {
     }
 
     public Dragon minByCoordinates() {
-        CollectionManager manager = Environment.getInstance().getCollectionManager();
+        CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
         if (manager.getCollection().isEmpty()) {
             return null;
         } else {

@@ -1,5 +1,7 @@
 package org.example.managers.commands;
 
+import org.example.managers.ServerEnvironment;
+
 public class RemoveCommand extends BaseCommand{
     public RemoveCommand() {
         super("remove");
@@ -7,7 +9,7 @@ public class RemoveCommand extends BaseCommand{
 
     @Override
     public void execute(String[] args) {
-        Environment.getInstance().getCollectionManager().getCollection().remove(Long.parseLong(args[0]));
+        ServerEnvironment.getInstance().getCollectionManager().getCollection().remove(Long.parseLong(args[0]));
         System.out.println("you have removed an item from the collection.");
     }
 
