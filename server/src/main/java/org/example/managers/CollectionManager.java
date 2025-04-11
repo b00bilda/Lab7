@@ -4,6 +4,8 @@ import org.example.recources.Dragon;
 import org.example.system.Request;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 
 public class CollectionManager {
@@ -45,5 +47,18 @@ public class CollectionManager {
             }
         });
         return text.toString();
+    }
+
+    public String getMinByCoordinates(Request request) {
+        if (hashTable.isEmpty()) {
+            return "Collection is empty";
+        } else {
+            CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
+            Comparator<Dragon> dragonComparator = Comparator
+                    .comparing((Dragon d) -> d.getCoordinates().getX())
+                    .thenComparing(d -> d.getCoordinates().getY());
+            Dragon min = Collections.min(manager.getCollection().values(), dragonComparator);
+            return min.toString();
+        }
     }
 }
