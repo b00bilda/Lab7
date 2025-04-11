@@ -6,21 +6,21 @@ import java.io.Serializable;
 
 public class Request implements Serializable {
     private String message;
-    private String key = null;
+    private String name = null;
     private Dragon dragon;
 
-    public Request(String message, Dragon dragon, String key) {
+    public Request(String message, Dragon dragon, String name) {
         this.message = message;
         this.dragon = dragon;
-        this.key = key;
+        this.name = name;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public String getKey() {
-        return key;
+    public String getName() {
+        return name;
     }
 
     public Dragon getDragon() {
@@ -31,8 +31,8 @@ public class Request implements Serializable {
         this.message = message;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setDragon(Dragon dragon) {
