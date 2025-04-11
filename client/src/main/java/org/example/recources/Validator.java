@@ -58,4 +58,50 @@ public class Validator {
         }
     }
 
+    public static void validateType(String arg) {
+        try {
+            DragonType.valueOf(arg);
+        } catch (IllegalArgumentException e) {
+            System.out.println();
+        }
+    }
+
+    public static void validateName(String arg) {
+        try {
+            ;
+        } catch (IllegalArgumentException e) {
+            System.out.println();
+        }
+    }
+
+    public static void validateCaveNumberOfTreasures(String arg) {
+        try {
+            int numberOfTreasures = Integer.parseInt(arg);
+            if (numberOfTreasures <= 0) {
+                throw new IllegalArgumentException("Number of treasure");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println();
+        }
+    }
+
+    public static void validateCaveDepth(String arg){
+        try {
+            Float depth = Float.parseFloat(arg);
+            if (arg == null) {
+                throw new IllegalArgumentException("depth cannot be null");
+            }
+        }catch (IllegalArgumentException e) {
+            System.out.println();
+        }
+    }
+
+    public static void validateSpeaking(){
+        try{
+
+        }catch (IllegalArgumentException e){
+            System.out.println();
+        }
+    }
+
 }
