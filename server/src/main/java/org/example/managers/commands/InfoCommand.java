@@ -1,6 +1,7 @@
 package org.example.managers.commands;
 
 import org.example.managers.CollectionManager;
+import org.example.managers.ServerEnvironment;
 import org.example.recources.Dragon;
 
 public class InfoCommand extends BaseCommand {
@@ -10,7 +11,7 @@ public class InfoCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        CollectionManager manager = Environment.getInstance().getCollectionManager();
+        CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
         System.out.println("collection type: " + manager.getClass().getSimpleName());
         System.out.println("element type: " + Dragon.class.getSimpleName());
         System.out.println("initialization date: " + manager.getInitializationDate());

@@ -1,5 +1,7 @@
 package org.example.managers.commands;
 
+import org.example.managers.ServerEnvironment;
+
 public class FilterLessThanWeightCommand extends BaseCommand {
     public FilterLessThanWeightCommand() {
         super("filter_less_than_weight");
@@ -11,7 +13,7 @@ public class FilterLessThanWeightCommand extends BaseCommand {
             if (args.length == 0) {
                 throw new IllegalArgumentException("Error: No argument provided. Please specify a weight value.");
             }
-            Environment.getInstance().getCollectionManager().getCollection().forEach((key, dragon) -> {
+            ServerEnvironment.getInstance().getCollectionManager().getCollection().forEach((key, dragon) -> {
                 int comparisonWeight = Integer.parseInt(args[0]);
                 if (dragon.getWeight() < comparisonWeight) {
                     System.out.println(dragon.toString());
