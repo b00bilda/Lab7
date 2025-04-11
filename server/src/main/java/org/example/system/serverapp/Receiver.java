@@ -38,6 +38,7 @@ public class Receiver {
             throw new IllegalArgumentException("command parameter");
         }
     }
+    public static String info()
 }
 
 
