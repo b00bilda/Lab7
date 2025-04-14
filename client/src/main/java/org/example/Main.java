@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.system.Client;
-import org.example.system.Server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
