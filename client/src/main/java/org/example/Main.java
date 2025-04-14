@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.system.Client;
 import org.example.system.Server;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class Main {
 //        String host = "127.0.0.1";
 //        int port = 6651;
 
-        Server server = new Server();
-        server.run();
+        Client client = new Client();
+        client.run();
     }
 }
