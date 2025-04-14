@@ -85,7 +85,7 @@ public class Validator {
         }
     }
 
-    public static void validateCaveDepth(String arg){
+    public static void validateCaveDepth(String arg) {
         try {
             Float depth = Float.parseFloat(arg);
             if (arg == null) {
@@ -96,10 +96,13 @@ public class Validator {
         }
     }
 
-    public static void validateSpeaking(){
-        try{
-
-        }catch (IllegalArgumentException e){
+    public static void validateSpeaking(String arg) {
+        try {
+            Boolean speaking = Boolean.parseBoolean(arg);
+            if (arg == null) {
+                throw new IllegalArgumentException("speaking can't be null");
+            }
+        } catch (IllegalArgumentException e) {
             System.out.println();
         }
     }

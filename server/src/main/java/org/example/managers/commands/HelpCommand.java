@@ -1,6 +1,7 @@
 package org.example.managers.commands;
 
-import org.example.managers.ServerEnvironment;
+import org.example.system.Request;
+import org.example.system.Receiver;
 
 public class HelpCommand extends BaseCommand {
 
@@ -8,11 +9,16 @@ public class HelpCommand extends BaseCommand {
         super("help");
     }
 
+//    @Override
+//    public void execute(String[] args) {
+//        ServerEnvironment.getInstance().getCommandManager().getCommandList().forEach((s, command) -> {
+//            System.out.println(s + ": " + command.getDescription());
+//        });
+//    }
+
     @Override
-    public void execute(String[] args) {
-        ServerEnvironment.getInstance().getCommandManager().getCommandList().forEach((s, command) -> {
-            System.out.println(s + ": " + command.getDescription());
-        });
+    public String execute(Request request) {
+        return Receiver.help(request);
     }
 
     @Override

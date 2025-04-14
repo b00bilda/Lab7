@@ -1,5 +1,7 @@
 package org.example.recources;
 
+import org.example.system.IdGenerator;
+
 import java.time.LocalDate;
 
 public class Dragon implements Comparable<Dragon> {
@@ -30,7 +32,18 @@ public class Dragon implements Comparable<Dragon> {
     }
 
     public Dragon() {
+    }
 
+    public Dragon(String[] data) {
+        this.id = IdGenerator.generateId();
+        this.name = data[0];
+        this.coordinates = new Coordinates(Double.parseDouble(data[1]), Long.parseLong(data[2]));
+        this.creationDate = LocalDate.now();
+        this.age = Long.parseLong(data[3]);
+        this.weight = Integer.parseInt(data[4]);
+        this.speaking = Boolean.parseBoolean(data[5]);
+        this.type = DragonType.valueOf(data[6]);
+        this.cave = new DragonCave(Integer.parseInt(data[7]), Float.parseFloat(data[8]));
     }
 
     public Dragon(Long id) {

@@ -2,7 +2,13 @@ package org.example.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import org.example.managers.deserializers.*;
+import org.example.managers.serializers.*;
+import org.example.recources.Coordinates;
 import org.example.recources.Dragon;
+import org.example.recources.DragonCave;
+import org.example.recources.DragonType;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -17,14 +23,14 @@ import java.util.List;
 
 
 public class FileManager {
-    public static void readFile() {
-        ServerEnvironment.getInstance().getCollectionManager().getCollection().putAll(jsonReader());
+    public static void readFile(String fileName) {
+        ServerEnvironment.getInstance().getCollectionManager().getCollection().putAll(jsonReader(fileName));
     }
 
-    private static Hashtable<Long, Dragon> jsonReader() {
-        String fileName = ServerEnvironment.getInstance().getPath();
+    private static Hashtable<Long, Dragon> jsonReader(String fileName) {
         File file = new File(fileName);
         Path path = file.toPath();
+        System.out.println("🔍 Попытка открыть файл: " + fileName);
 
         if (fileName == null) {
             System.out.println("Ошибка: Переменная окружения MY_FILE_PATH не задана!");
@@ -70,7 +76,7 @@ public class FileManager {
 
     private static void jsonWriter() {
         // String fileName = "./dragons.json";
-        String fileName = Environment.getInstance().getPath();
+        String fileName = System.getenv("MY_FILE_PATH");
 
         if (fileName == null) {
             System.out.println("Ошибка: Переменная окружения MY_FILE_PATH не задана!");
@@ -82,11 +88,11 @@ public class FileManager {
                 .registerTypeAdapter(Coordinates.class, new CoordinatesSerializer())
                 .registerTypeAdapter(DragonCave.class, new DragonCaveSerializer())
                 .registerTypeAdapter(DragonType.class, new DragonTypeSerializer())
-                .registerTypeAdapter(LocalDate.class, new LocalDateTimeSerializer())
+                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
                 .create();
 
         try (FileWriter writer = new FileWriter(fileName)) {
-            gson.toJson(Environment.getInstance().getCollectionManager().getCollection().values(), writer);
+            gson.toJson(ServerEnvironment.getInstance().getCollectionManager().getCollection().values(), writer);
         } catch (IOException e) {
             System.err.println("Something went wrong while writing collection to file.");
         }

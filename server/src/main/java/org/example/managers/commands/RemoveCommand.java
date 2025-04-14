@@ -1,16 +1,22 @@
 package org.example.managers.commands;
 
-import org.example.managers.ServerEnvironment;
+import org.example.system.Request;
+import org.example.system.Receiver;
 
 public class RemoveCommand extends BaseCommand{
     public RemoveCommand() {
         super("remove");
     }
 
+//    @Override
+//    public void execute(String[] args) {
+//        ServerEnvironment.getInstance().getCollectionManager().getCollection().remove(Long.parseLong(args[0]));
+//        System.out.println("you have removed an item from the collection.");
+//    }
+
     @Override
-    public void execute(String[] args) {
-        ServerEnvironment.getInstance().getCollectionManager().getCollection().remove(Long.parseLong(args[0]));
-        System.out.println("you have removed an item from the collection.");
+    public String execute(Request request) {
+        return Receiver.remove(request);
     }
 
     @Override

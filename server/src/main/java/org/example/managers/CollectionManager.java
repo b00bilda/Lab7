@@ -5,6 +5,7 @@ import org.example.system.Request;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CollectionManager {
     public static Hashtable<Long, Dragon> hashTable = new Hashtable<>();
@@ -119,6 +120,19 @@ public class CollectionManager {
             sumOfAges = sumOfAges + dragon.getAge();
         });
         return Long.toString(sumOfAges);
+    }
+
+    public String show(Request request) {
+        if (hashTable.isEmpty()) {
+            return "Collection is empty";
+        }
+        StringBuilder text = new StringBuilder();
+        if (request.getMessage().split(" ").length == 1) {
+            text.append(hashTable.entrySet().stream()
+                    .map(entry -> entry.getKey() + ": " + entry.getValue())
+                    .collect(Collectors.joining("\n")));
+        }
+        return text.toString();
     }
 
 }

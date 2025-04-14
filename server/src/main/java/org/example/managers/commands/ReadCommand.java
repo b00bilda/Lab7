@@ -1,15 +1,16 @@
 package org.example.managers.commands;
 import org.example.managers.ServerEnvironment;
+import org.example.system.Request;
 
 public class ReadCommand extends BaseCommand {
     public ReadCommand() {
         super("read");
     }
 
+
     @Override
-    public void execute(String[] args) {
-        ServerEnvironment.getInstance().getFileManager().readFile();
-        System.out.println("Collection was successfully read from file");
+    public String execute(Request request) {
+        return "";
     }
 
     @Override
