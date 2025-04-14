@@ -39,7 +39,7 @@ public class ExecuteScript {
                             dragonData[n] = line;
                         }
                     }
-                    Server.sendRequest(new Request("insert " + key, new Dragon(dragonData), key));
+                    Client.sendRequest(new Request("insert " + key, new Dragon(dragonData), key));
                 } else if (line.contains("execute_script")) {
                     File anotherFile = new File(line.split(" ")[1]);
                     if (stack.contains(anotherFile)) {
@@ -48,10 +48,10 @@ public class ExecuteScript {
                     if (!file.canRead()) {
                         System.err.println("Something wrong with reading a file");
                     } else {
-                        Server.sendRequest(new Request(line, new Dragon(dragonData), null));
+                        Client.sendRequest(new Request(line, new Dragon(dragonData), null));
                     }
                 } else {
-                    Server.sendRequest(new Request(line, new Dragon(dragonData), null));
+                    Client.sendRequest(new Request(line, new Dragon(dragonData), null));
                 }
             }
 
