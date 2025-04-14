@@ -13,23 +13,26 @@ public class Receiver {
             throw new IllegalArgumentException("command parameter");
         }
     }
+
     public static String exit(Request request) {
-        if (request.getMessage().split("").length == 1 ) {
+        if (request.getMessage().split("").length == 1) {
             System.exit(0);
             return "";
         } else {
             throw new IllegalArgumentException("command parameter");
         }
     }
-    public static String filterLessThanWeight(Request request){
-        if (request.getMessage().split(" ").length == 2){
+
+    public static String filterLessThanWeight(Request request) {
+        if (request.getMessage().split(" ").length == 2) {
             ServerEnvironment.getInstance().getCollectionManager().filterLessThanWeight(request);
             return "Collection was changed";
         } else {
             throw new IllegalArgumentException("command parameter");
         }
     }
-    public static String help(Request request){
+
+    public static String help(Request request) {
         if (request.getMessage().split(" ").length == 1) {
             StringBuilder text = new StringBuilder();
             ServerEnvironment.getInstance().getCommandManager().getCommandList().forEach((s, command) -> {
@@ -49,9 +52,9 @@ public class Receiver {
 //            System.out.println("initialization date: " + manager.getInitializationDate());
 //            System.out.println("amount of elements: " + manager.getCollection().size());
             return "collection type: " + manager.getClass().getSimpleName() + "\n" +
-                "element type: " + Dragon.class.getSimpleName() + "\n" +
-                "initialization date: " + manager.getInitializationDate() + "\n" +
-                "amount of elements: " + manager.getCollection().size();
+                    "element type: " + Dragon.class.getSimpleName() + "\n" +
+                    "initialization date: " + manager.getInitializationDate() + "\n" +
+                    "amount of elements: " + manager.getCollection().size();
         } else {
             throw new IllegalArgumentException("command parameter");
         }
