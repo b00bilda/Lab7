@@ -164,7 +164,7 @@ public class Dragon implements Comparable<Dragon> {
                 ", age='" + age + '\'' +
                 ", weight='" + weight + '\'' +
                 ", speaking='" + speaking + '\'' +
-                ", type='" + type +'\'' +
+                ", type='" + type + '\'' +
                 ", caveDepth='" + cave.getDepth() + '\'' +
                 ", caveNumberOfTreasures='" + cave.getNumberOfTreasures() + '\'' +
                 '}';

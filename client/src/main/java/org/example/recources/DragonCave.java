@@ -9,7 +9,8 @@ public class DragonCave {
         this.setDepth(depth);
     }
 
-    public DragonCave() {}
+    public DragonCave() {
+    }
 
 
     public Float getDepth() {

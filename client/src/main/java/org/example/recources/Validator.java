@@ -1,6 +1,6 @@
 package org.example.recources;
 
-// валидация вводимых данных на клиенте
+
 public class Validator {
     public static void validateId(String arg) {
         long id;

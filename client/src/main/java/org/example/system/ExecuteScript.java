@@ -62,11 +62,11 @@ public class ExecuteScript {
         }
     }
 
-        public String getName() {
-            return "execute_script";
-        }
+    public String getName() {
+        return "execute_script";
+    }
 
-        public String getDescription() {
-            return "executes script from file";
-        }
+    public String getDescription() {
+        return "executes script from file";
+    }
 }
