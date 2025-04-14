@@ -24,39 +24,28 @@ public class MainServer {
 
         String filePath = System.getenv("MY_FILE_PATH");
         if (filePath == null) {
-            System.err.println("❌ Переменная MY_FILE_PATH не задана");
+            System.err.println("Environmental variable MY_FILE_PATH wasn't founded");
             return;
         }
 
-//        File file = new File(filePath);
-//        if (!file.exists() || !file.canRead()) {
-//            System.err.println("❌ Невозможно прочитать файл: " + filePath);
-//            return;
-//        }
+        System.out.println("Reading a file " + filePath);
 
-        System.out.println("📂 Чтение файла: " + filePath);
-        // Пример: просто читаем содержимое
-
-            File file = new File(filePath);
-            if (!file.exists() || !file.canRead()) {
-                System.err.println("❌ Невозможно прочитать файл: " + filePath);
-                return;
+        File file = new File(filePath);
+        if (!file.exists() || !file.canRead()) {
+            System.err.println("Can't read a file " + filePath);
+            return;
+        }
+        if (file.canRead() && file.canWrite()) {
+            System.out.println("Downloading data from file.");
+            try {
+                ServerEnvironment.getInstance().getFileManager().readFile(filePath);
+                System.out.println("Data was downloaded");
+            } catch (Exception e) {
+                System.out.println("Something wrong with reading a file");
             }
-            if (file.canRead() && file.canWrite()) {
-                System.out.println("Downloading data from file.");
-                System.out.println("👉 filePath: " + filePath);
-
-                try {
-                    ServerEnvironment.getInstance().getFileManager().readFile(filePath);
-                    System.out.println("Data was downloaded");
-                } catch (Exception e) {
-                    System.out.println("Something wrong with reading a file");
-                }
-            }
-
+        }
 
         Server server = new Server(6651);
-            server.run();
-
+        server.run();
     }
 }
