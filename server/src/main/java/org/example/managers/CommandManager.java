@@ -44,23 +44,4 @@ public class CommandManager {
             return "Command doesn't exist";
         }
     }
-
-    public String startExecutingClient(Request request) {
-        String commandName = request.getMessage().split(" ")[0];
-        if (commandName.equals("save") && commandName.equals("exit")) {
-            return "Command doesn't exist";
-        } else {
-            return startExecuting(request);
-        }
-    }
-
-    public void startExecutingServer(Request request) {
-        try {
-            if (request.getMessage().equals("exit") || request.getMessage().equals("save")){
-                startExecuting(request);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }
