@@ -14,13 +14,13 @@ public class CommandManager {
         commandList.put("help", new HelpCommand());
         commandList.put("exit", new ExitCommand());
         commandList.put("clear", new ClearCommand());
+        commandList.put("remove_lower", new RemoveLowerCommand());
         commandList.put("filter_less_than_weight", new FilterLessThanWeightCommand());
         commandList.put("info", new InfoCommand());
         commandList.put("insert", new InsertCommand());
         commandList.put("min_by_coordinates", new MinByCoordinatesCommand());
         commandList.put("remove", new RemoveCommand());
         commandList.put("remove_greater", new RemoveGreaterCommand());
-        commandList.put("remove_lower", new RemoveLowerCommand());
         commandList.put("replace_if_greater", new ReplaceIfGreaterCommand());
         commandList.put("show", new ShowCommand());
         commandList.put("sum_of_age", new SumOfAgeCommand());
