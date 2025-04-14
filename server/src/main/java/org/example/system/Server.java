@@ -21,13 +21,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public class Server {
-    private ServerSocket serverSocket;
-    private ServerSocketChannel serverSocketChannel;
-    String filePath;
-    private File file;
-    BufferedReader consoleReader;
     Gson gson;
-    //SocketChannel clientSocket;
     int port;
 
     public Server(int port) {
