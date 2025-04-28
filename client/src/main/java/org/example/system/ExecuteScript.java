@@ -4,13 +4,15 @@ import org.example.recources.Dragon;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class ExecuteScript {
     private static Stack<File> stack = new Stack<>();
 
-    public static void execute(String command) {
-        File file = new File(command.split(" ")[1]);
+    public static void execute(String fileName) {
+        Request request = null;
+        File file = new File(fileName);
 
         if (stack.contains(file)) {
             System.err.println("Recursion detected");
@@ -22,24 +24,32 @@ public class ExecuteScript {
             System.err.println("Something wrong with file");
         }
 
-        String fileName = command.split(" ")[1];
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
             String line;
-            String[] dragonData = new String[8];
+            // String[] dragonData = new String[9];
             while ((line = br.readLine()) != null) {
-                if (line.split(" ")[0].equals("insert")) {
-                    String key = line.split(" ")[1];
-                    for (int n = 0; n < 7; n++) {
-                        if (n == 0) {
-                            continue;
-                        } else if (n == 3) {
-                            dragonData[n] = LocalDateTime.now().toString();
-                        } else if ((line = br.readLine()) != null) {
-                            dragonData[n] = line;
+                String[] parts = line.trim().split("\\s+");
+
+                if (parts[0].equals("insert")) {
+                    try {
+                        // Заполняем массив данных для дракона
+                        String[] dragonData = new String[9]; // Убедитесь, что длина массива совпадает с количеством элементов
+                        for (int n = 0; n < 9; n++) {
+                            dragonData[n] = parts[n + 1]; // Заполняем данные начиная с части 1 (skip "insert")
+                            System.out.println("dragonData[" + n + "]: " + dragonData[n]); // Печать значений данных
                         }
+
+                        // Печать информации о запросе перед отправкой
+                        System.out.println("Sending dragon data: " + Arrays.toString(dragonData));
+
+                        // Создаем объект Dragon и отправляем запрос
+                        Client.sendRequest(new Request("insert", new Dragon(dragonData), dragonData));
+
+                    } catch (Exception e) {
+                        System.out.println("Something wrong with dragon data: ");
+                        e.printStackTrace(); // Выводим подробности ошибки для диагностики
                     }
-                    Client.sendRequest(new Request("insert " + key, new Dragon(dragonData), key));
                 } else if (line.contains("execute_script")) {
                     File anotherFile = new File(line.split(" ")[1]);
                     if (stack.contains(anotherFile)) {
@@ -48,10 +58,14 @@ public class ExecuteScript {
                     if (!file.canRead()) {
                         System.err.println("Something wrong with reading a file");
                     } else {
-                        Client.sendRequest(new Request(line, new Dragon(dragonData), null));
+                        Client.sendRequest(new Request("insert", new Dragon(), null));
                     }
                 } else {
-                    Client.sendRequest(new Request(line, new Dragon(dragonData), null));
+                    String[] commandLine = line.split(" ");
+                    String[] arguments = Arrays.copyOfRange(commandLine, 1, commandLine.length);
+                    System.out.println(arguments.toString());
+                    String command = commandLine[0];
+                    Client.sendRequest(new Request(command, new Dragon(), arguments));
                 }
             }
 

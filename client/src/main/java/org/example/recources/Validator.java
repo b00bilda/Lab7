@@ -2,6 +2,8 @@ package org.example.recources;
 
 
 public class Validator {
+
+
     public static void validateId(String arg) {
         long id;
         try {

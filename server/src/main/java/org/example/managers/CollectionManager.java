@@ -38,7 +38,7 @@ public class CollectionManager {
         if (hashTable.isEmpty()) {
             return "Collection in empty";
         }
-        int weight = Integer.parseInt(request.getMessage().split(" ")[1]);
+        int weight = Integer.parseInt(request.getArgs()[0]);
         StringBuilder text = new StringBuilder();
         ServerEnvironment.getInstance().getCollectionManager().getCollection().forEach((key, dragon) -> {
             int comparisonWeight = weight;

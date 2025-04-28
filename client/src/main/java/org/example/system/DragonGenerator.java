@@ -259,7 +259,7 @@ public class DragonGenerator {
         return new DragonCave(numberOfTreasures, depth);
     }
 
-    private String readString() {
+    public String readString() {
         String value;
         while (true) {
             try {
