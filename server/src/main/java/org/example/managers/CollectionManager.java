@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.example.system.Receiver.downloadData;
+
 public class CollectionManager {
     public static Hashtable<Long, Dragon> hashTable = new Hashtable<>();
     private static LocalDate date;
@@ -32,6 +34,10 @@ public class CollectionManager {
 
     public static LocalDate getInitializationDate() {
         return date;
+    }
+
+    public void setTable(Hashtable<Long, Dragon> table) {
+        CollectionManager.hashTable = table;
     }
 
     public String filterLessThanWeight(Request request) {
@@ -72,10 +78,17 @@ public class CollectionManager {
             while (iterator.hasNext()) {
                 Map.Entry<Long, Dragon> entry = iterator.next();
                 if (entry.getValue().getWeight() > maxWeight) {
-                    iterator.remove();
+                    if (DatabaseManager.removeOrganizationById(entry.getValue().getID())) {
+                        downloadData();
+                        return "Collection was changed";
+                    } else {
+                        return "Collection wasn't changed";
+                    }
+                } else {
+                    return "Collection wasn't changed";
                 }
             }
-            return "Collection was changed";
+            return "";
         }
     }
 
@@ -89,10 +102,15 @@ public class CollectionManager {
             while (iterator.hasNext()) {
                 Map.Entry<Long, Dragon> entry = iterator.next();
                 if (entry.getValue().getWeight() < minWeight) {
-                    iterator.remove();
+                    if (DatabaseManager.removeOrganizationById(entry.getValue().getID())) {
+                        downloadData();
+                        return "Collection was changed";
+                    } else {
+                        return "Collection wasn't changed";
+                    }
                 }
             }
-            return "Collection was changed";
+            return "";
         }
     }
 
@@ -106,13 +124,15 @@ public class CollectionManager {
             // DragonGenerator dragonGenerator = Environment.getInstance().getDragonGenerator();
             Dragon dragon = request.getDragon();
             if (manager.getCollection().get(key).compareTo(dragon) == 1) {
-                manager.getCollection().remove(key);
-                manager.add(dragon);
+                if (DatabaseManager.updateDragonById(manager.getCollection().get(key).getID(), request.getUsername(), dragon)) {
+                    downloadData();
+                    return "Changes was accepted";
+                }
             } else {
                 System.out.println("New dragon's age is less. Try again!");
             }
         }
-        return "Changes was accepted";
+        return "";
     }
 
     public String getSumOfAges() {

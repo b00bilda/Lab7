@@ -1,12 +1,14 @@
 package org.example.system;
 
 import org.example.managers.CollectionManager;
+import org.example.managers.DatabaseManager;
 import org.example.managers.ServerEnvironment;
 import org.example.recources.Dragon;
 
 public class Receiver {
     public static String clear(Request request) {
-        ServerEnvironment.getInstance().getCollectionManager().getCollection().clear();
+        DatabaseManager.clear(request.getUsername());
+        downloadData();
         return "Collection is cleared";
     }
 
@@ -40,10 +42,19 @@ public class Receiver {
                 "amount of elements: " + manager.getCollection().size();
     }
 
+    public static void downloadData() {
+        CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
+        manager.setTable(DatabaseManager.getCollectionFromDatabase());
+    }
+
     public static String insert(Request request) {
         CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
-        manager.add(request.getDragon());
-        return "Element was added";
+        if (!manager.getCollection().containsKey(request.getDragon().getID())) {
+            if (DatabaseManager.insertDragon(request.getDragon(), request.getUsername())) {
+                downloadData();
+                return "Element was added";
+            } else return "Something wrong";
+        } else return "Something wrong";
     }
 
     public static String showMinByCoordinates(Request request) {
@@ -78,14 +89,14 @@ public class Receiver {
     }
 
     public static String updateById(Request request) {
-        CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
-        long key = Long.parseLong(request.getArgs()[1]);
-        if (request.getArgs().length == 1 & manager.getCollection().containsKey(key)) {
-            manager.getCollection().remove(key);
-            manager.add(request.getDragon());
-            return "Element was updated";
-        } else {
-            throw new IllegalArgumentException("command parameter");
+        try {
+            long id = Long.parseLong(request.getArgs()[1]);
+            if (DatabaseManager.updateDragonById(id, request.getUsername(), request.getDragon())) {
+                downloadData();
+                return "Element was updated";
+            } else return "Element wasn't updated";
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
         }
     }
 

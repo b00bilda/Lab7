@@ -23,6 +23,8 @@ public class Client {
     String filePath = System.getenv("MY_FILE_PATH");
     private File file;
     BufferedReader consoleReader;
+    private String username = null;
+    private String password = null;
     //Gson gson;
 
 
@@ -43,6 +45,7 @@ public class Client {
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonLocalDate()).create();
         DragonGenerator dragonGenerator = new DragonGenerator();
         System.out.println("Welcome to app!");
+        System.out.println("Register or login to change the collection.");
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
             String[] commandLine = input.split(" ");
@@ -51,6 +54,17 @@ public class Client {
             String command = commandLine[0];
             Request request = null;
             Dragon dragon = null;
+
+            while ((username == null) || password == null) {
+                if (command.equals("register") || command.equals("login")) {
+                    request = new Request(command, dragon, arguments);
+                    username = arguments[0];
+                    password = arguments[1];
+                    break;
+                } else {
+                    System.out.println("Another commands are not available. Register or login to use it");
+                }
+            }
 
             if (!command.isEmpty()) {
                 switch (command) {
@@ -75,12 +89,12 @@ public class Client {
                         break;
                 }
 
-                request = new Request(input, dragon, arguments);
+                request = new Request(input, dragon, arguments, username, password);
 
 
                 String jsonRequest = gson.toJson(request, Request.class) + "\n";
                 try (SocketChannel channel = SocketChannel.open()) {
-                    channel.connect(new InetSocketAddress("localhost", 6651));
+                    channel.connect(new InetSocketAddress("localhost", 6652));
                     ByteBuffer buffer = ByteBuffer.wrap(jsonRequest.getBytes(StandardCharsets.UTF_8));
                     channel.write(buffer);
 

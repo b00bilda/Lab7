@@ -1,18 +1,19 @@
 package org.example;
 
-import org.example.managers.CollectionManager;
-import org.example.managers.CommandManager;
-import org.example.managers.FileManager;
-import org.example.managers.ServerEnvironment;
+import org.example.managers.*;
 import org.example.system.Server;
 
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class MainServer {
+    public static final String URL = "jdbc:postgresql://localhost:6651/dragons";
+
     public static void main(String[] args) {
+
         ServerEnvironment serverEnvironment = ServerEnvironment.getInstance();
         CollectionManager collectionManager = new CollectionManager();
         CommandManager commandManager = new CommandManager();
@@ -21,6 +22,11 @@ public class MainServer {
         serverEnvironment.setCollectionManager(collectionManager);
         serverEnvironment.setCommandManager(commandManager);
         serverEnvironment.setFileManager(fileManager);
+
+        DatabaseManager.setURL(URL);
+        DatabaseManager.setUsername("postgres");
+        DatabaseManager.setPassword("71886228");
+        DatabaseManager.connectToDatabase();;
 
         String filePath = System.getenv("MY_FILE_PATH");
         if (filePath == null) {
@@ -45,7 +51,7 @@ public class MainServer {
             }
         }
 
-        Server server = new Server(6651);
+        Server server = new Server(6652);
         server.run();
     }
 }

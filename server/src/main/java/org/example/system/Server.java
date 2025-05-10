@@ -2,9 +2,10 @@ package org.example.system;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.example.managers.CollectionManager;
 import org.example.managers.CommandManager;
-import org.example.managers.FileManager;
-import org.example.managers.ServerEnvironment;
+import org.example.managers.*;
+import org.example.recources.Dragon;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -17,12 +18,22 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
-public class Server {
+public class Server implements Runnable {
     Gson gson;
     int port;
+    private static Set<String> registeredUsers = new HashSet<>();
+    private final ExecutorService readerPool = Executors.newCachedThreadPool();
+    private final ForkJoinPool forkJoinPool = new ForkJoinPool();
+    private final ConcurrentHashMap<String, Dragon> dragonsCollection = new ConcurrentHashMap<>();
 
     public Server(int port) {
         this.port = port;
@@ -30,10 +41,12 @@ public class Server {
     }
 
     public void run() {
+        CollectionManager manager = ServerEnvironment.getInstance().getCollectionManager();
+        manager.setTable(DatabaseManager.getCollectionFromDatabase());
         try (Selector selector = Selector.open();
              ServerSocketChannel serverChannel = ServerSocketChannel.open()) {
 
-            serverChannel.bind(new InetSocketAddress(6651));
+            serverChannel.bind(new InetSocketAddress(6652));
             serverChannel.configureBlocking(false);
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 
@@ -54,45 +67,66 @@ public class Server {
                     }
 
                     if (key.isReadable()) {
-                        SocketChannel clientChannel = (SocketChannel) key.channel();
-                        StringBuilder data = (StringBuilder) key.attachment();
-                        ByteBuffer buffer = ByteBuffer.allocate(8192);
+                        readerPool.submit(() -> {
+                            SocketChannel clientChannel = (SocketChannel) key.channel();
+                            StringBuilder data = (StringBuilder) key.attachment();
+                            ByteBuffer buffer = ByteBuffer.allocate(8192);
 
-                        int bytesRead = clientChannel.read(buffer);
-                        if (bytesRead == -1) {
-                            clientChannel.close();
-                            continue;
-                        }
+                            try {
+                                int bytesRead = clientChannel.read(buffer);
+                                if (bytesRead == -1) {
+                                    clientChannel.close();
+                                    return;
+                                }
 
-                        buffer.flip();
-                        String received = StandardCharsets.UTF_8.decode(buffer).toString();
-                        data.append(received);
+                                buffer.flip();
+                                String received = StandardCharsets.UTF_8.decode(buffer).toString();
+                                data.append(received);
 
-                        if (received.contains("\n")) {
-                            String json = data.toString().trim();
-                            System.out.println("Recieved: " + json);
+                                if (received.contains("\n")) {
+                                    String json = data.toString().trim();
+                                    System.out.println("Recieved: " + json);
 
-                            Request request = gson.fromJson(json, Request.class);
-                            CommandManager commandManager = ServerEnvironment.getInstance().getCommandManager();
-                            String result = commandManager.startExecuting(request);
-                            System.out.println(result);
-                            Response response = new Response(result);
+                                    Request request = gson.fromJson(json, Request.class);
+                                    CommandManager commandManager = ServerEnvironment.getInstance().getCommandManager();
+                                    forkJoinPool.submit(() -> {
+                                        String result = commandManager.startExecuting(request);
+                                        System.out.println(result);
+                                        Response response = new Response(result);
 
-                            String responseJson = gson.toJson(response) + "\n";
-                            ByteBuffer responseBuffer = ByteBuffer.wrap(responseJson.getBytes(StandardCharsets.UTF_8));
-                            clientChannel.write(responseBuffer);
-                            clientChannel.close();
-
-                            System.out.println("Response was sent");
-                        }
+                                        new Thread(() -> {
+                                            sendResponse(clientChannel, response);
+                                        }).start();
+                                    });
+                                }
+                            } catch (IOException e) {
+                                System.err.println(e.getMessage() + "Something wrong with reading from client");
+                            }
+                        });
+                        keyIterator.remove();
                     }
-
-                    keyIterator.remove();
                 }
             }
 
         } catch (IOException e) {
             System.err.println("Server initialization error " + e.getMessage());
         }
+    }
+
+        private void sendResponse(SocketChannel clientChannel, Response response) {
+            try {
+                String responseJson = gson.toJson(response) + "\n";
+                ByteBuffer responseBuffer = ByteBuffer.wrap(responseJson.getBytes(StandardCharsets.UTF_8));
+                clientChannel.write(responseBuffer);
+                clientChannel.close();
+
+                System.out.println("Response was sent");
+            } catch (IOException e) {
+                System.err.println("Error sending response: " + e.getMessage());
+            }
+        }
+
+    public static void addUser(String username) {
+        registeredUsers.add(username);
     }
 }

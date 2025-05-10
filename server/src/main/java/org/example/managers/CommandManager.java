@@ -28,6 +28,8 @@ public class CommandManager {
         commandList.put("save", new SaveCommand());
         //commandList.put("execute_script", new ExecuteScriptCommand());
         commandList.put("read", new ReadCommand());
+        commandList.put("register", new RegisterCommand());
+        commandList.put("login", new LoginCommand());
     }
 
     public HashMap<String, BaseCommand> getCommandList() {
